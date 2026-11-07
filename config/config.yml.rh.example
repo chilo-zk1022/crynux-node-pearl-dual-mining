@@ -1,0 +1,81 @@
+log:
+  # The directory to save the log files
+  dir: "logs"
+
+  # Log level could be "DEBUG", "INFO", "WARNING", "ERROR"
+  level: "INFO"
+
+  # Max size of one log file before rotation, in bytes
+  max_bytes: 52428800
+
+  # Number of rotated backup files to keep
+  backup_count: 5
+
+task_error_report:
+  automatic: false
+
+dual_mining:
+  enabled: true
+  # Pearl payout address (prl1...). Do not reuse the Crynux EVM private key.
+  pearl_address: ""
+  pearl_worker: "crynux-dual"
+  pearl_pool_url: "stratum+tcp://pool.pearlhash.xyz:9000"
+  pearlhash_kernel: "2"
+  free_vram_threshold_mib: 1024
+  idle_grace_sec: 2.0
+
+ethereum:
+  # The JSON RPC endpoint of the Blockchain node
+  provider: "https://json-rpc.rh.crynux.io"
+  network: "crynux-on-rh"
+  chain_id: 18896215
+
+  # The Blockchain params
+  gas_price: 700000000
+  gas: 8000000
+
+  # The deployed addresses of the smart contracts
+  contract:
+    benefit_address: "0xd2EA1749399B1d9D12B03B5443F3B9Bd059DFfDE"
+    node_staking: "0xFc80e019d00f0d06CbebdE648990A89c5a25B425"
+    delegated_staking: "0x19d8A7584830fbbB163E25e5691dc84c58467C2f"
+
+# The database used to store the local state data
+# The data will not be large. A sqlite file is more than enough
+# There is no need to mount this file to the host machine to persist it
+db:
+  # The database dirver, can only be sqlite now
+  driver: sqlite
+  # The sqlite database file
+  filename: db/server.db
+
+# The URL of the Relay
+relay_url: "https://relay.crynux.io"
+
+# The directory that stores the distribution files of the WebUI
+web_dist: dist
+
+# The resource dir for icons etc.
+resource_dir: res
+
+task_config:
+  # Optional local preload before join. Default empty: base models come from
+  # Relay DownloadModel events (required_models_by_vram and demand-driven).
+  # Fill these lists only for local debugging.
+  preloaded_models:
+    sd_base: []
+    gpt_base: []
+    controlnet: []
+    lora: []
+
+  # The proxy server used when downloading models.
+  proxy:
+    host: ""
+    port: 33210
+
+  # URL of repository stores patch files of crynux worker
+  worker_patch_url: https://raw.githubusercontent.com/crynux-network/crynux-worker/main
+
+  # Tensor parallel fallback when model dims are not divisible by GPU count
+  # device_map: classic layer sharding; reduce_gpus: use fewer GPUs that divide
+  tp_fallback: device_map

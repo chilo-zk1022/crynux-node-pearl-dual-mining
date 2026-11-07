@@ -1,0 +1,23 @@
+services:
+  crynux_pearl:
+    # Change -rh-pearl to -base-pearl when using the Base network example.
+    image: ghcr.io/chilo-zk1022/crynux-node:3.7.1-rh-pearl
+    container_name: crynux-pearl
+    restart: unless-stopped
+    ports:
+      - "7412:7412"
+    environment:
+      NVIDIA_VISIBLE_DEVICES: "0"
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    volumes:
+      - ./config:/app/config
+      - ./data/tmp:/app/tmp
+      - ./data/db:/app/db
+      - ./data/logs:/app/logs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["0"]
+              capabilities: [gpu]

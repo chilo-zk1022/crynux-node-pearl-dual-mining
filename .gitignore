@@ -1,0 +1,9 @@
+config/config.yml
+config/private_key.txt
+data/tmp/**
+!data/tmp/.gitkeep
+data/db/**
+!data/db/.gitkeep
+data/logs/**
+!data/logs/.gitkeep
+*.log
