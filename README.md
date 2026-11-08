@@ -32,18 +32,25 @@ When a Crynux task arrives, Pearl mining pauses so Crynux can use the GPU. When 
 
 ## Usage
 
-Requirements: Docker with the NVIDIA Container Toolkit, a Crynux node wallet, and a separate Pearl payout address (`prl1...`). Do **not** reuse the Crynux EVM private key as a Pearl address.
+Requirements: Docker with the NVIDIA Container Toolkit, a Crynux node wallet, and a separate Pearl payout address (`prl1...`).
+
+> Startup is the same as the [official Crynux Node Docker guide](https://docs.crynux.io/node-hosting/start-a-node/start-a-node-docker), with two differences:
+>
+> 1. Use the dual-mining images from [ghcr.io/chilo-zk1022/crynux-node](https://github.com/chilo-zk1022/crynux-node/pkgs/container/crynux-node) instead of the official Crynux image. Builds are published for both official L2 networks: Crynux-on-Robinhood (`*-rh-pearl`) and Crynux-on-Base (`*-base-pearl`).
+> 2. Set your Pearl payout address in `config/config.yml` under `dual_mining.pearl_address`.
 
 1. Clone this repository.
 
-2. Choose a network and copy the matching example:
+2. Choose a Crynux L2 network. Copy the matching config example, and set the matching image tag in `docker-compose.yml`:
 
 ```bash
-# Robinhood (default image tag in docker-compose.yml)
+# Crynux-on-Robinhood
 cp config/config.yml.rh.example config/config.yml
+# image: ghcr.io/chilo-zk1022/crynux-node:3.7.1-rh-pearl
 
-# Or Crynux-on-Base (also change the compose image to *-base-pearl)
+# Or Crynux-on-Base
 cp config/config.yml.base.example config/config.yml
+# image: ghcr.io/chilo-zk1022/crynux-node:3.7.1-base-pearl
 ```
 
 3. Put your Crynux private key in `config/private_key.txt` (same format as a normal Crynux Docker node).
@@ -61,25 +68,13 @@ dual_mining:
   idle_grace_sec: 2.0
 ```
 
-5. If you use Base, edit `docker-compose.yml` and set the image tag to the Base pearl image, for example:
-
-```yaml
-image: ghcr.io/chilo-zk1022/crynux-node:3.7.1-base-pearl
-```
-
-The default compose file uses:
-
-```yaml
-image: ghcr.io/chilo-zk1022/crynux-node:3.7.1-rh-pearl
-```
-
-6. Start:
+5. Start:
 
 ```bash
 docker compose up -d
 ```
 
-7. Follow logs:
+6. Follow logs:
 
 ```bash
 docker compose logs -f
@@ -92,15 +87,15 @@ Controller lines are prefixed with `[dual_controller]`.
 | Path | Purpose |
 |---|---|
 | `docker-compose.yml` | Single service; mounts `config/` and `data/` |
-| `config/config.yml.rh.example` | Robinhood network template |
-| `config/config.yml.base.example` | Base network template |
+| `config/config.yml.rh.example` | Crynux-on-Robinhood network template |
+| `config/config.yml.base.example` | Crynux-on-Base network template |
 | `config/config.yml` | Your real config (gitignored) |
 | `config/private_key.txt` | Crynux wallet key (gitignored) |
 | `data/tmp`, `data/db`, `data/logs` | Persistent node data (contents gitignored) |
 
 ### Image tags
 
-- `ghcr.io/chilo-zk1022/crynux-node:<version>-rh-pearl`
-- `ghcr.io/chilo-zk1022/crynux-node:<version>-base-pearl`
+- `ghcr.io/chilo-zk1022/crynux-node:<version>-rh-pearl` — Crynux-on-Robinhood
+- `ghcr.io/chilo-zk1022/crynux-node:<version>-base-pearl` — Crynux-on-Base
 
 Replace `<version>` with the release you want (for example `3.7.1`).
